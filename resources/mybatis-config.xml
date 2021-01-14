@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML 문서의 유효성 체크를 위해서 필요한 부분 --> 
+<!DOCTYPE configuration PUBLIC
+	"-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<!-- 
+	
+	* Configuration
+	    마이바티스 설정 관련된 기본 셋팅들을 선언할 수 있는 영역
+	  configuration 내부에서 작성되는 element들도 순서가 있다.
+	
+	 -->
+	 
+	 <!-- driver.properties 적용 -->
+	 <properties resource="driver.properties"/>
+	 
+	 <!-- 마이바티스 설정과 기본셋팅 선언 -->
+	 <settings>
+	 	<!-- 만약에 null로 데이터가 전달되었다면 빈칸이 아닌 null로 인식해라 -->
+	 	<!-- value에 null은 반드시 대문자로! -->
+	 	<setting name="jdbcTypeForNull" value="NULL"/>
+	 </settings>
+	 
+	 <!-- DB 연결할 설정에 대한 정보를 선언하는 부분 -->
+	 <!-- defauit : 연결설정을 여러개 생성하여 아이디로 구분하고 기본으로 연결할 설정 정보를 설정하는 속성 -->
+	 <environments default="development">
+	 	<environment id="development">
+	 		<!-- 마이바디스의 핵심이 되는 설정은 트랜잭션을 제어하기 위한 TransactionManager와 함께
+	 			 데이터베이스 Connection 인스턴스를 가져오기위한 DaTaSource를 포함하고있다.
+	 			 
+	 			 transactionManager -> JDBC와 MANAGED 둥중 하나를 설정할 수 있다.
+	 			 	- JDBC : JDBC가 commit과 rollback의 기능을 직접 사용하게 하는 옵션(수동commit)
+	 			 		트랜잭션의 스코프(범위)를 관리하기위해서 dataSource로 부터 connect를 가져온다.
+	 			 	- MANAGED : 트랜잭션에 대해 어떠한 영향도 행사하지 않는다는 홉션(자동 commit)
+	 			 		SQL 컨테이너가 트랜잭션의 모든 생명주기를 관리한다. default로 connect를 닫아준다
+	 			 
+	 			  -->
+			<transactionManager type="JDBC"/>
+			
+			<!-- 실제 DB접속에 관한 정보를 넣는 태그
+				 type속성은 ConnectionPool을 사용할 건지에 대한 여부
+				 POOLED와 UNPOOLED를 사용할 수 있다.
+			
+			 -->
+			<dataSource type="POOLED">
+				<!-- 연결에 필요한 정보들을 property로 등록 -->
+				<!-- name은 key에 해달하고, value가 value에 해당 -->
+				<!-- 1. driver, url, username, password 정보를 여기에 직접 작성 -->
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+	 			<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+				<property name="username" value="mybatis"/>
+				<property name="password" value="mybatis"/>
+				<!-- 2. driver.properties 파일로 연결하기 -->
+			</dataSource>
+	 	</environment>
+	 </environments>
+	 
+</configuration>
