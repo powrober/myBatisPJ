@@ -10,26 +10,26 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 public class Template {
 
 	public static SqlSession getSqlSession() {
-		// SqlSession ê°ì²´ë¥¼ ë°˜í™˜í•˜ê¸° ìœ„í•´ì„œ ë³€ìˆ˜ ì„ ì–¸
+		// SqlSession °´Ã¼¸¦ ¹İÈ¯ÇÏ±â À§ÇØ¼­ º¯¼ö ¼±¾ğ
 		SqlSession session = null;
 		
 		/*
-		 *  [ ê¸°ì¡´ ]
-		 *  JDBCTemplateì—ì„œ public static Connection getConnection()ê³¼ ê°™ì€ ë©”ì†Œë“œ
-		 *  driver,sqlì ‘ì† ì •ë³´ê°€ ë“¤ì–´ìˆëŠ” ì„¤ì •ì •ë³´ë“¤ì„ ë¶ˆëŸ¬ì™€ì„œ ì´ ë©”ì†Œë“œ ì•ˆì—ì„œ DBMSì™€ ì—°ê²°
+		 *  [ ±âÁ¸ ]
+		 *  JDBCTemplate¿¡¼­ public static Connection getConnection()°ú °°Àº ¸Ş¼Òµå
+		 *  driver,sqlÁ¢¼Ó Á¤º¸°¡ µé¾îÀÖ´Â ¼³Á¤Á¤º¸µéÀ» ºÒ·¯¿Í¼­ ÀÌ ¸Ş¼Òµå ¾È¿¡¼­ DBMS¿Í ¿¬°á
 		 *  [ mybatis ]
-		 *  mybatis-config.xml íŒŒì¼ì„ í†µí•´ì„œ driver,sqlì ‘ì†ê´€ë ¨ ì •ë³´ë¥¼ ë¯¸ë¦¬ ì‘ì„±í•´ì„œ ë¶ˆëŸ¬ì˜¤ë©´
-		 *  SqlSessionê°ì²´ ìƒì„±ì´ ê°€ëŠ¥í•˜ë‹¤.
+		 *  mybatis-config.xml ÆÄÀÏÀ» ÅëÇØ¼­ driver,sqlÁ¢¼Ó°ü·Ã Á¤º¸¸¦ ¹Ì¸® ÀÛ¼ºÇØ¼­ ºÒ·¯¿À¸é
+		 *  SqlSession°´Ã¼ »ı¼ºÀÌ °¡´ÉÇÏ´Ù.
 		 */
 		InputStream stream;
-		// Resourcesë¼ëŠ” í´ë˜ìŠ¤ëŠ” ë§ˆì´ë°”í‹°ìŠ¤ ë¼ì´ë¸ŒëŸ¬ë¦¬ì—ì„œ ì œê³µí•˜ëŠ” utilì„± í´ë˜ìŠ¤
-		// -> í˜„ì¬ í´ë˜ìŠ¤ íŒ¨ìŠ¤ì™€ ë‹¤ë¥¸ ìœ„ì¹˜ì— ìˆëŠ” ìì›ì„ ë¡œë“œí•˜ëŠ” ê²ƒì„ ì¢€ ë” ì‰½ê²Œ í•´ì£¼ëŠ” ì—­í• 
+		// Resources¶ó´Â Å¬·¡½º´Â ¸¶ÀÌ¹ÙÆ¼½º ¶óÀÌºê·¯¸®¿¡¼­ Á¦°øÇÏ´Â util¼º Å¬·¡½º
+		// -> ÇöÀç Å¬·¡½º ÆĞ½º¿Í ´Ù¸¥ À§Ä¡¿¡ ÀÖ´Â ÀÚ¿øÀ» ·ÎµåÇÏ´Â °ÍÀ» Á» ´õ ½±°Ô ÇØÁÖ´Â ¿ªÇÒ
 		try {
 			stream = Resources.getResourceAsStream("/mybatis-config.xml");
 			
-			// SqlSessionì„ ë§Œë“¤ê¸° ìœ„í•´ì„œëŠ” SqlSessionFactoryì—ì„œ openSessionì„ ì´ìš©í•´ì•¼í•œë‹¤.
-			// SqlSessionFactoryëŠ” SqlSessionFactoryBuilderë¼ëŠ” í´ë˜ìŠ¤ì˜ build()ë¥¼í†µí•´ì„œ ìƒì„±ì„ í•œë‹¤.
-			// openSession(false)ì˜ ì˜ë¯¸ëŠ” ìë™ ì»¤ë°‹ì„ í•˜ì§€ ì•Šê² ë‹¤
+			// SqlSessionÀ» ¸¸µé±â À§ÇØ¼­´Â SqlSessionFactory¿¡¼­ openSessionÀ» ÀÌ¿ëÇØ¾ßÇÑ´Ù.
+			// SqlSessionFactory´Â SqlSessionFactoryBuilder¶ó´Â Å¬·¡½ºÀÇ build()¸¦ÅëÇØ¼­ »ı¼ºÀ» ÇÑ´Ù.
+			// openSession(false)ÀÇ ÀÇ¹Ì´Â ÀÚµ¿ Ä¿¹ÔÀ» ÇÏÁö ¾Ê°Ú´Ù
 			session = new SqlSessionFactoryBuilder().build(stream).openSession(false);
 			
 		} catch (IOException e) {
@@ -37,9 +37,9 @@ public class Template {
 		}
 		return session;
 		
-		// commit(),rollback(),close() ...ì€ ìƒì„±í•˜ì§€ ì•Šì•„ë„ ëœë‹¤.
-		// Statement, PreparedStatementê´€ë ¨, ResultSet
-		// Why? SqlSessioní´ë˜ìŠ¤ ì´ë¯¸ commit,rollback,close í•¨ìˆ˜ë¥¼ ì œê³µí•´ì£¼ê³ ìˆë‹¤.
+		// commit(),rollback(),close() ...Àº »ı¼ºÇÏÁö ¾Ê¾Æµµ µÈ´Ù.
+		// Statement, PreparedStatement°ü·Ã, ResultSet
+		// Why? SqlSessionÅ¬·¡½º ÀÌ¹Ì commit,rollback,close ÇÔ¼ö¸¦ Á¦°øÇØÁÖ°íÀÖ´Ù.
 		
 		
 	}

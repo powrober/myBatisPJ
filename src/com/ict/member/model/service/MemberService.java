@@ -4,9 +4,9 @@ import com.ict.member.model.vo.Member;
 
 public interface MemberService {
 	
-	// ì¸í„°í˜ì´ìŠ¤ì— ìƒì„±ë˜ëŠ” ëª¨ë“  ë©”ì†Œë“œëŠ” ì „ë¶€ abstract(ì¶”ìƒ)ë©”ì†Œë“œë§Œ ì¡´ì¬ë¥¼ í•œë‹¤.
-	// public abstractëŠ” ìƒëµì´ ê°€ëŠ¥í•˜ë‹¤.
+	// ÀÎÅÍÆäÀÌ½º¿¡ »ı¼ºµÇ´Â ¸ğµç ¸Ş¼Òµå´Â ÀüºÎ abstract(Ãß»ó)¸Ş¼Òµå¸¸ Á¸Àç¸¦ ÇÑ´Ù.
+	// public abstract´Â »ı·«ÀÌ °¡´ÉÇÏ´Ù.
 	
-	// íšŒì›ê°€ì… ì²˜ë¦¬ìš© ì„œë¹„ìŠ¤
+	// È¸¿ø°¡ÀÔ Ã³¸®¿ë ¼­ºñ½º
 	int insertMember(Member mem);
 }

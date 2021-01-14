@@ -30,7 +30,7 @@ public class MemberInsertServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// íŒŒë¼ë¯¸í„°ë¡œ ë„˜ì–´ì˜¨ ì „ë‹¬ê°’ì„ ë³€ìˆ˜ì— ì €ì¥
+		// ÆÄ¶ó¹ÌÅÍ·Î ³Ñ¾î¿Â Àü´Ş°ªÀ» º¯¼ö¿¡ ÀúÀå
 		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
 		String userName = request.getParameter("userName");
@@ -40,10 +40,10 @@ public class MemberInsertServlet extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String address = request.getParameter("address");
 		
-		// Serviceë¡œ ì „ì†¡í•˜ê¸° ìœ„í•œ Member ê°ì²´ ìƒì„±
+		// Service·Î Àü¼ÛÇÏ±â À§ÇÑ Member °´Ã¼ »ı¼º
 		Member m = new Member(userId,userPwd,userName,email,birthDay,gender,phone,address);
 		
-		MemberService mService = new MemberServiceImpl(); // ë‹¤í˜•ì„±
+		MemberService mService = new MemberServiceImpl(); // ´ÙÇü¼º
 		
 		int result = mService.insertMember(m);
 	}

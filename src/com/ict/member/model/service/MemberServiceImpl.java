@@ -7,16 +7,16 @@ import static com.ict.common.Template.getSqlSession;
 import org.apache.ibatis.session.SqlSession;
 
 public class MemberServiceImpl implements MemberService {
-	// MemberServiceë¥¼ ì‹¤ì²´í™”(implements)í•˜ê²Œë˜ë©´
-	// MemberServiceì¸í„°í˜ì´ìŠ¤ì— ìˆëŠ” ì¶”ìƒë©”ì†Œë“œë¥¼ ì—¬ê¸°ì„œ ì „ë¶€ êµ¬í˜„ì‹œì¼œì£¼ì–´ì•¼í•œë‹¤.
+	// MemberService¸¦ ½ÇÃ¼È­(implements)ÇÏ°ÔµÇ¸é
+	// MemberServiceÀÎÅÍÆäÀÌ½º¿¡ ÀÖ´Â Ãß»ó¸Ş¼Òµå¸¦ ¿©±â¼­ ÀüºÎ ±¸Çö½ÃÄÑÁÖ¾î¾ßÇÑ´Ù.
 	
-	// MemberDaoë©”ì†Œë“œ í˜¸ì¶œí•˜ê¸°ìœ„í•´ì„œ ì°¸ì¡°ë³€ìˆ˜ ì„ ì–¸ ë° ìƒì„±
+	// MemberDao¸Ş¼Òµå È£ÃâÇÏ±âÀ§ÇØ¼­ ÂüÁ¶º¯¼ö ¼±¾ğ ¹× »ı¼º
 	private MemberDao mDao = new MemberDao();
 	
 	@Override
 	public int insertMember(Member mem) {
 		
-		// Connectionê°ì²´ë¥¼ ìš°ì„  ë§Œë“¤ì–´ ì¤˜ì•¼í•˜ëŠ”ë°, ë§ˆì´ë°”í‹°ìŠ¤ì—ì„œëŠ” Connectionê°ì²´ ëŒ€ì‹ ì— SqlSessionê°ì²´ë¥¼ ìƒì„±í•œë‹¤.
+		// Connection°´Ã¼¸¦ ¿ì¼± ¸¸µé¾î Áà¾ßÇÏ´Âµ¥, ¸¶ÀÌ¹ÙÆ¼½º¿¡¼­´Â Connection°´Ã¼ ´ë½Å¿¡ SqlSession°´Ã¼¸¦ »ı¼ºÇÑ´Ù.
 		
 		SqlSession session = getSqlSession();
 		
