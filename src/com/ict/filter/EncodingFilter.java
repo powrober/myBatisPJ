@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebFilter;
 /**
  * Servlet Filter implementation class EncodingFilter
  */
-@WebFilter("/*") // urlPatternsÀ» ÅëÇØ¼­ ¸ğµç ¼­ºí¸´À» °¡±â Àü¿¡ °ÅÃÄ¾ßÇÒ ÇÊÅÍ¸¦ ¼³Á¤
+@WebFilter("/*") // urlPatternsì„ í†µí•´ì„œ ëª¨ë“  ì„œë¸”ë¦¿ì„ ê°€ê¸° ì „ì— ê±°ì³ì•¼í•  í•„í„°ë¥¼ ì„¤ì •
 public class EncodingFilter implements Filter {
 
     /**
@@ -33,7 +33,7 @@ public class EncodingFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		//ºä¿¡¼­ Àü´Ş¹ŞÀº °ª¿¡ ÇÑ±ÛÀÌ ÀÖÀ» °æ¿ì
+		//ë·°ì—ì„œ ì „ë‹¬ë°›ì€ ê°’ì— í•œê¸€ì´ ìˆì„ ê²½ìš°
 		request.setCharacterEncoding("utf-8");
 		
 		chain.doFilter(request, response);

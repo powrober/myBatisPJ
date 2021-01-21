@@ -1,27 +1,29 @@
 package com.ict.member.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.ict.member.model.service.MemberService;
 import com.ict.member.model.service.MemberServiceImpl;
 import com.ict.member.model.vo.Member;
 
 /**
- * Servlet implementation class MemberInsertServlet
+ * Servlet implementation class MemberDeleteServlet
  */
-@WebServlet("/insert.me")
-public class MemberInsertServlet extends HttpServlet {
+@WebServlet("/mDelete.do")
+public class MemberDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MemberInsertServlet() {
+    public MemberDeleteServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,31 +32,22 @@ public class MemberInsertServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 파라미터로 넘어온 전달값을 변수에 저장
-		String userId = request.getParameter("userId");
-		String userPwd = request.getParameter("userPwd");
-		String userName = request.getParameter("userName");
-		String email = request.getParameter("email");
-		String birthDay = request.getParameter("birthDay");
-		String gender = request.getParameter("gender");
-		String phone = request.getParameter("phone");
-		String address = request.getParameter("address");
 		
-		// Service로 전송하기 위한 Member 객체 생성
-		Member m = new Member(userId,userPwd,userName,email,birthDay,gender,phone,address);
+		HttpSession session = request.getSession();
+		Member loginUser = (Member)session.getAttribute("loginUser");
 		
-		MemberService mService = new MemberServiceImpl(); // 다형성
+		MemberService mService = new MemberServiceImpl();
 		
-		int result = mService.insertMember(m);
+		int result = mService.deleteMember(loginUser);
 		
-		if(result > 0) { // 회원가입 성공 시
-			request.getSession().setAttribute("loginUser", mService.selectMember(m));
-			System.out.println(request.getContextPath());
+		if(result > 0) {
+			session.invalidate();
 			response.sendRedirect(request.getContextPath());
 		}else {
-			request.setAttribute("msg", "회원가입에 실패했습니다.");
+			request.setAttribute("msg", "회원탈퇴에 실패하였습니다.");
 			request.getRequestDispatcher("WEB-INF/views/common/errorPage.jsp").forward(request, response);
 		}
+		
 	}
 
 	/**

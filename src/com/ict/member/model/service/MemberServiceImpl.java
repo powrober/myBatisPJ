@@ -7,16 +7,16 @@ import static com.ict.common.Template.getSqlSession;
 import org.apache.ibatis.session.SqlSession;
 
 public class MemberServiceImpl implements MemberService {
-	// MemberService¸¦ ½ÇÃ¼È­(implements)ÇÏ°ÔµÇ¸é
-	// MemberServiceÀÎÅÍÆäÀÌ½º¿¡ ÀÖ´Â Ãß»ó¸Þ¼Òµå¸¦ ¿©±â¼­ ÀüºÎ ±¸Çö½ÃÄÑÁÖ¾î¾ßÇÑ´Ù.
+	// MemberServiceë¥¼ ì‹¤ì²´í™”(implements)í•˜ê²Œë˜ë©´
+	// MemberServiceì¸í„°íŽ˜ì´ìŠ¤ì— ìžˆëŠ” ì¶”ìƒë©”ì†Œë“œë¥¼ ì—¬ê¸°ì„œ ì „ë¶€ êµ¬í˜„ì‹œì¼œì£¼ì–´ì•¼í•œë‹¤.
 	
-	// MemberDao¸Þ¼Òµå È£ÃâÇÏ±âÀ§ÇØ¼­ ÂüÁ¶º¯¼ö ¼±¾ð ¹× »ý¼º
+	// MemberDaoë©”ì†Œë“œ í˜¸ì¶œí•˜ê¸°ìœ„í•´ì„œ ì°¸ì¡°ë³€ìˆ˜ ì„ ì–¸ ë° ìƒì„±
 	private MemberDao mDao = new MemberDao();
 	
 	@Override
 	public int insertMember(Member mem) {
 		
-		// Connection°´Ã¼¸¦ ¿ì¼± ¸¸µé¾î Áà¾ßÇÏ´Âµ¥, ¸¶ÀÌ¹ÙÆ¼½º¿¡¼­´Â Connection°´Ã¼ ´ë½Å¿¡ SqlSession°´Ã¼¸¦ »ý¼ºÇÑ´Ù.
+		// Connectionê°ì²´ë¥¼ ìš°ì„  ë§Œë“¤ì–´ ì¤˜ì•¼í•˜ëŠ”ë°, ë§ˆì´ë°”í‹°ìŠ¤ì—ì„œëŠ” Connectionê°ì²´ ëŒ€ì‹ ì— SqlSessionê°ì²´ë¥¼ ìƒì„±í•œë‹¤.
 		
 		SqlSession session = getSqlSession();
 		
@@ -27,6 +27,53 @@ public class MemberServiceImpl implements MemberService {
 		}else {
 			session.rollback();
 		}
+		session.close();
+		
+		return result;
+	}
+
+	@Override
+	public Member selectMember(Member mem) {
+		
+		SqlSession session = getSqlSession();
+		
+		Member loginUser = mDao.selectMember(session, mem);
+		
+		// selectì˜ ìž‘ì—…ì´ë‹ˆ, commit, rollbackì€ í•˜ì§€ ì•Šì•„ë„ ëœë‹¤.
+		
+		session.close();
+		
+		return loginUser;
+	}
+
+	@Override
+	public int updateMember(Member mem) {
+		SqlSession session = getSqlSession();
+		
+		int result = mDao.updateMember(session,mem);
+		
+		if(result > 0) {
+			session.commit();
+		}else {
+			session.rollback();
+		}
+		session.close();
+		
+		return result;
+	}
+
+	@Override
+	public int deleteMember(Member mem) {
+		SqlSession session = getSqlSession();
+		
+		int result = mDao.deleteMember(session,mem);
+		
+		if(result > 0) {
+			session.commit();
+		}else {
+			session.rollback();
+		}
+		
 		session.close();
 		
 		return result;

@@ -4,9 +4,32 @@ import com.ict.member.model.vo.Member;
 
 public interface MemberService {
 	
-	// ÀÎÅÍÆäÀÌ½º¿¡ »ı¼ºµÇ´Â ¸ğµç ¸Ş¼Òµå´Â ÀüºÎ abstract(Ãß»ó)¸Ş¼Òµå¸¸ Á¸Àç¸¦ ÇÑ´Ù.
-	// public abstract´Â »ı·«ÀÌ °¡´ÉÇÏ´Ù.
+	// ì¸í„°í˜ì´ìŠ¤ì— ìƒì„±ë˜ëŠ” ëª¨ë“  ë©”ì†Œë“œëŠ” ì „ë¶€ abstract(ì¶”ìƒ)ë©”ì†Œë“œë§Œ ì¡´ì¬ë¥¼ í•œë‹¤.
+	// public abstractëŠ” ìƒëµì´ ê°€ëŠ¥í•˜ë‹¤.
 	
-	// È¸¿ø°¡ÀÔ Ã³¸®¿ë ¼­ºñ½º
+	/**
+	 * íšŒì›ì¡°íšŒ
+	 * @author ìœ ìŠ¹ì œ 
+	 * @param mem ë©¤ë²„ê°ì²´
+	 * @return
+	 */
+	Member selectMember(Member mem);
+	
+	// íšŒì›ê°€ì… ì²˜ë¦¬ìš© ì„œë¹„ìŠ¤
 	int insertMember(Member mem);
+	
+	/**
+	 * íšŒì›ì •ë³´ìˆ˜ì •
+	 * @param mem(ë¹„ë°€ë²ˆí˜¸, ì´ë©”ì¼, ì „í™”ë²ˆí˜¸, ì£¼ì†Œ)
+	 * @return
+	 */
+	int updateMember(Member mem);
+	
+	/**
+	 * íšŒì›ì •ë³´ì‚­ì œ
+	 * @param mem
+	 * @return
+	 */
+	int deleteMember(Member mem);
+	
 }

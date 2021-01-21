@@ -3,10 +3,103 @@
 "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="memberMapper">
+	<resultMap type="Member" id="memberResultSet">
+		<!-- property : 자바의 필드변수 이름 / column : DB의 해당컬럼  -->
+		
+		<!-- id: DB에서의 기본키 -->
+		<id property="mId" column="MID"/>
+		
+		<!-- DB의 일반 컬럼들 -->
+		<result property="userId" column="USER_ID"/>
+		<result property="userPwd" column="USER_PWD"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="email" column="EMAIL"/>
+		<result property="birthDay" column="BIRTHDAY"/>
+		<result property="gender" column="GENDER"/>
+		<result property="phone" column="PHONE"/>
+		<result property="address" column="ADDRESS"/>
+		<result property="enrollDate" column="ENROLL_DATE"/>
+		<result property="updateDate" column="UPDATE_DATE"/>
+		<result property="mStatus" column="M_STATUS"/>
+		
+	</resultMap>
 	
+	<!-- 
+		id: 외부(Dao)에서 참조하기 위한 쿼리문의 고유 아이디
+		parameterType : 내부로 받을 객체(mybatis-config.xml에 설정된 alias로 이용가능)
+		type: ResultSet을 담을 VO클래스명으로 어떤 타입을 참조할 것인지 기술(alias 이용가능)
+		
+		쿼리문 기본적으로 preparedStatement 이다.
+		?(위치홀더) 대신 직접 parameter로 전달받은 객체의 값을 꺼내어쓴다. #{필드명}으로 값을 꺼낸다.
+		
+		Select의 경우 쿼리문 수행 결과가 담긴 ResultSet은 resultType의 객체에 자동으로 mapping되어서 리턴이된다.
+		-> 어떻게 mapping되냐하면, 디비에 존재하는 Member라는 테이블의 컬럼명과 자바에서의 Member클래스 필드명이 동일할 경우 자동으로 mapping이 되어 
+		   Member객체가 리턴이된다.
+		   
+		하지만 디비와 Member클래스의 vo필드명이 다를  경우에는 값을 받아오지 못한다. 그래서 resultType보다는 resultMap을 이용하여 명시적으로 컬럼명과 필드명을 mapping 시켜주자
+		
+		[주의 사항]
+		여러줄로 줄바꿈 문자를 섞어서 사용가능하다.
+		단, 문장 마침을 나타내는 세미콜론은 에러를 유발하니 쓰지말자.
+	 -->
+	<!-- <select id="loginMember" parameterType="Member" resultType="Member">
+		SELECT
+		       *
+		  FROM MEMBER
+		 WHERE USER_ID = #{ userId }
+		   AND USER_PWD= #{ userPwd }
+	</select>  -->
+	<select id="loginMember" parameterType="Member" resultMap="memberResultSet">
+		SELECT
+		       *
+		  FROM MEMBER
+		 WHERE USER_ID = #{ userId }
+		   AND USER_PWD= #{ userPwd }
+	</select>
 	
+	 
+	 
 	<!-- insert 쿼리문을 작성 -->
 	<insert id="insertMember" parameterType="Member">
-	
+		INSERT 
+		  INTO MEMBER
+		VALUES ( 
+		         seq_mid.nextval
+		       , #{ userId }
+		       , #{ userPwd }
+		       , #{ userName }
+		       , #{ email }
+		       , #{ birthDay }
+		       , #{ gender }
+		       , #{ phone }
+		       , #{ address }
+		       , SYSDATE
+		       , SYSDATE
+		       , DEFAULT	      
+		       )
 	</insert>
+	
+	<update id="updateMember" parameterType="Member">
+		UPDATE 
+			   MEMBER
+		   SET 
+		       USER_PWD = #{ userPwd }
+		     , EMAIL = #{ email }
+		     , PHONE = #{ phone }
+		     , ADDRESS = #{ address }
+	     WHERE 
+	           USER_ID = #{ userId }
+	</update>
+	
+	<delete id="deleteMember" parameterType="Member">
+		DELETE 
+		  FROM MEMBER
+		 WHERE USER_ID = #{ userId }
+	</delete>
 </mapper>
+
+
+
+
+
+

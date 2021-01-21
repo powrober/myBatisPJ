@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="boardMapper">
+  <!-- 1_3. resultMap 추가 -->
+  <!--      게시글 목록들 조회용 resultMap -->
+  <resultMap type="Board" id="blistResultSet">
+    <!-- property의 값은 Board의 필드명과 동일하게 써줘야한다.
+         column의 값은 데이터베이스의 컬럼명과 동일하게 써줘야한다.
+         
+         <id>는 테이블에서의 기본키값(PK값)을 나타낸다.
+         <result>는 테이블에서의 일반컬럼을 나타낸다.
+     -->
+  	<id property="bId" column="BID"/>
+  	<result property="bType" column="BTYPE"/>
+  	<result property="bTitle" column="BTITLE"/>
+  	<result property="bContent" column="BCONTENT"/>
+  	<result property="bWriter" column="BWRITER"/>
+  	<result property="userName" column="USER_NAME"/>
+  	<result property="bCount" column="BCOUNT"/>
+  	<result property="bCreateDate" column="B_CREATE_DATE"/>
+  	<result property="bModifyDate" column="B_MODIFY_DATE"/>
+  	<result property="bStatus" column="B_STATUS"/>
+  </resultMap>
+  
+  <!-- 2_3.게시글 상세보기용 resultMap -->
+  <resultMap type="Reply" id="replyResultSet">
+  	<id property="rId" column="RID"/>
+  	<result property="rContent" column="RCONTENT"/>
+  	<result property="refBid" column="REF_BID"/>
+  	<result property="rWriter" column="RWRITER"/>
+  	<result property="userName" column="R_USER_NAME"/>
+  	<result property="rCreateDate" column="R_CREATE_DATE"/>
+  	<result property="rModifyDate" column="R_MODIFY_DATE"/>
+  	<result property="rStatus" column="R_STATUS"/>
+  </resultMap>
+  
+  <resultMap type="Board" id="bdetailResultSet">
+    <id property="bId" column="BID"/>
+  	<result property="bType" column="BTYPE"/>
+  	<result property="bTitle" column="BTITLE"/>
+  	<result property="bContent" column="BCONTENT"/>
+  	<result property="bWriter" column="BWRITER"/>
+  	<result property="userName" column="B_USER_NAME"/>
+  	<result property="bCount" column="BCOUNT"/>
+  	<result property="bCreateDate" column="B_CREATE_DATE"/>
+  	<result property="bModifyDate" column="B_MODIFY_DATE"/>
+  	<result property="bStatus" column="B_STATUS"/>
+  
+    <collection property="replyList" javaType="java.util.ArrayList" resultMap="replyResultSet"/>
+  </resultMap>
+
+  
+  <!-- 1_1. 게시글 수 조회용 쿼리문 -->
+  <select id="selectListCount" resultType="_int">
+  	SELECT
+  	       COUNT(*)
+  	  FROM BOARD
+  	 WHERE B_STATUS='Y'
+  </select>
+  
+  <!-- 1_2. 게시글 목록 조회용 쿼리문 -->
+  <select id="selectBoardList" resultMap="blistResultSet">
+  	SELECT
+  	       *
+  	  FROM BOARD B
+  	  JOIN MEMBER M 
+  	    ON (B.BWRITER = M.MID)
+  	 WHERE B_STATUS = 'Y'
+  	 ORDER BY BID DESC
+  </select>
+
+  <!-- 2_1. 조회수 증가용 쿼리문 -->
+  <update id="updateBoardCount">
+  	UPDATE
+  	       BOARD
+  	   SET BCOUNT = BCOUNT + 1
+  	 WHERE BID= #{ bId }
+  </update>
+ 
+ <!-- 2_2. 상세보기용 쿼리문 -->
+ <select id="selectBoardDetail" resultMap="bdetailResultSet">
+	 	SELECT
+	           BID
+	         , BTYPE
+	         , BTITLE
+	         , BCONTENT
+	         , M.USER_NAME AS B_USER_NAME
+	         , BCOUNT
+	         , B_CREATE_DATE
+	         , B_MODIFY_DATE
+	         , B_STATUS
+	         , RID
+	         , RCONTENT
+	         , REF_BID
+	         , M2.USER_NAME AS R_USER_NAME
+	         , R_CREATE_DATE
+	         , R_MODIFY_DATE
+	         , R_STATUS
+	      FROM BOARD B
+	      JOIN MEMBER M 
+	        ON (B.BWRITER = M.MID)
+	      LEFT JOIN REPLY R
+	        ON (B.BID = R.REF_BID)
+	      LEFT JOIN MEMBER M2 
+	        ON (R.RWRITER = M2.MID)
+	     WHERE B.BID = #{ bId }
+	       AND B_STATUS = 'Y'
+	     ORDER BY RID DESC
+ </select>
+ <select id="selectSearchResultCount" resultType="_int">
+ 	SELECT
+ 	       COUNT(*)
+ 	  FROM BOARD B
+ 	  JOIN MEMBER M 
+ 	    ON (B.BWRITER = M.MID)
+ 	 WHERE B_STATUS='Y'
+    <!-- 1. if문으로 하는 방법 -->
+    <if test="writer != null">
+       AND USER_NAME LIKE '%'|| #{ writer } ||'%'
+    </if>
+ 	<if test="title != null">
+ 	   AND BTITLE LIKE '%'|| #{ title } || '%'
+ 	</if>
+    <if test="content != null">
+       AND BCONTENT LIKE '%' || #{ content } || '%'
+    </if>
+ </select>
+ 
+ <select id="selectSearchResultList" resultMap="blistResultSet">
+    <!--  
+    	만약에 쿼리문을 평소대로 그냥 작성한다면 안에 <, >라는 기호가 포함된다면 연산자로 인식하지 않고 태그로 인식해버린다.
+    	=> 이걸 해결해주기위해서 쿼리문을 CDATA주석으로 감싸야되는 경우도 있다.
+    	
+    	<![CDATA[......]]>로 쿼리문을 감싸서 사용한다. 동적SQL을 사용해야되는 경우 <> 이런 부분을 사용할때 감싸준다.
+    -->
+ 	SELECT
+ 	       *
+ 	  FROM BOARD B
+ 	  JOIN MEMBER M 
+ 	    ON (B.BWRITER = M.MID)
+ 	 WHERE B_STATUS = 'Y'
+ 	 <!-- 2. choose, when, otherwise로 하는 방법 -->
+ 	 <choose>
+ 	 	<when test="writer != null">
+   		<![CDATA[
+ 	 		AND USER_NAME LIKE '%' || #{writer} ||'%'
+ 		 ]]>
+ 	 	</when>
+ 	 	<when test="title != null">
+ 	 		AND BTITLE LIKE '%' || #{ title } || '%'
+ 	 	</when>
+ 	 	<otherwise>
+ 	 		AND BCONTENT LIKE '%'|| #{ content } || '%'
+ 	 	</otherwise>
+ 	 	
+ 	 </choose>
+ 	 ORDER BY BID DESC
+ 	 
+ </select>
+ 
+ <update id="updateBoardResult">
+ 	UPDATE 
+ 	       BOARD
+ 	  <set>
+ 	  	<if test="bTitle != null">
+ 	  		BTITLE = #{ bTitle },
+ 	  	</if> 
+ 	  	<if test="bContent != null">
+ 	  		BCONTENT = #{ bContent },
+ 	  	</if>
+ 	  </set>
+     WHERE bId = #{ bId }
+ </update>
+ 
+ <insert id="insertBoardResult">
+ 	INSERT 
+ 	  INTO BOARD
+ 	VALUES (
+ 	         SEQ_BID.NEXTVAL
+ 		   , 1
+ 		   , #{ bTitle }
+ 		   , #{ bContent }
+ 		   , #{ bWriter }
+ 		   , DEFAULT
+ 		   , SYSDATE
+ 		   , SYSDATE
+ 		   , DEFAULT
+ 	       )
+ </insert>
+ 
+ <update id="updateBoard">
+ 	UPDATE 
+ 		   BOARD
+ 	   SET
+ 	       B_STATUS= 'N'
+ 	 WHERE BID = #{ bId }
+ </update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

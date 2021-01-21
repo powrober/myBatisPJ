@@ -11,4 +11,20 @@ public class MemberDao {
 		return result;
 	}
 
+	public Member selectMember(SqlSession session, Member mem) {
+		Member loginUser = session.selectOne("memberMapper.loginMember",mem);
+		return loginUser;
+	}
+
+	public int updateMember(SqlSession session, Member mem) {
+		int result = session.update("memberMapper.updateMember", mem);
+		return result;
+	}
+
+	public int deleteMember(SqlSession session, Member mem) {
+		int result = session.delete("memberMapper.deleteMember",mem);
+		return result;
+	}
+
+	
 }
